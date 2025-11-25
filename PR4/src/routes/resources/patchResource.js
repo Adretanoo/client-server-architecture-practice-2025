@@ -21,6 +21,7 @@ module.exports = {
       },
       body: {
         type: 'object',
+        required: ['price', 'amount'],
         properties: {
           price: { type: 'number' },
           amount: { type: 'number' },
@@ -30,27 +31,16 @@ module.exports = {
     },
     handler: async (request, reply) => {
       try {
-        // @ts-ignore
-        const { id } = request.params;
-
-        // @ts-ignore
-        const { amount, price } = request.body;
-
-        const existing = await resourceRepository.read(id);
-
-        if (!existing) {
-          return reply.code(404).send({ error: 'Resource not found' });
-        }
-
-        const updatedData = {
-          name: existing.name,
-          type: existing.type,
-          amount: typeof amount !== 'undefined' ? amount : existing.amount,
-          price: typeof price !== 'undefined' ? price : existing.price,
-        };
-
-        const patched = await resourceRepository.update(id, updatedData);
-
+        const { id } = /**
+         * @type {{ id: string }}
+         */ (request.params);
+        const { amount = 0, price = 0 } = /**
+         * @type {{amount?: number, price?: number}}
+         */ (request.body);
+        const patched = await resourceRepository.update(id, {
+          amount,
+          price,
+        });
         return reply.code(200).send(patched);
       } catch (error) {
         request.log.error(error);
@@ -59,4 +49,3 @@ module.exports = {
     },
   },
 };
-

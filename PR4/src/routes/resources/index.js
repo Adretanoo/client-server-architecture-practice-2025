@@ -7,6 +7,7 @@ const { patchResource } = require('./patchResource');
 const { deleteResource } = require('./deleteResource');
 
 /**
+ * Register all resource routes
  * @param {import('fastify').FastifyInstance} fastify
  */
 async function resourcesRouter(fastify) {
