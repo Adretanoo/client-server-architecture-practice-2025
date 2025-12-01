@@ -1,4 +1,4 @@
-FROM node:24
+FROM node:22.21.0
 
 # Set SHELL environment variable to a supported shell
 ENV SHELL=/bin/bash
